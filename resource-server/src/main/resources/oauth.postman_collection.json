@@ -1,0 +1,427 @@
+{
+	"info": {
+		"_postman_id": "cfb61ccb-2e3c-4217-a2f2-26072c5e2ff0",
+		"name": "oauth",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "tokenOauthRequest",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://llocalhost:9922/oauth/token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d16893e8-2458-41e9-96ec-c039ca692c31",
+						"exec": [
+							"const jsonData = pm.response.json();",
+							"const cashId = jsonData.access_token",
+							"console.log('access_token :  '+ jsonData.access_token );",
+							"console.log('refreshToken :  '+ jsonData.refresh_token );",
+							"pm.environment.set(\"token\",jsonData.access_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"followOriginalHttpMethod": true,
+				"followAuthorizationHeader": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "secret",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "cash",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "read",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "slawek",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "password",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:9922/oauth/token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9922",
+					"path": [
+						"oauth",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "check_token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:9922/oauth/check_token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9922",
+					"path": [
+						"oauth",
+						"check_token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "test greeting  resource server",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiYXBpIl0sInVzZXJfbmFtZSI6InNsYXdlayIsInNjb3BlIjpbInJlYWQiXSwiZXhwIjoxNjA2MjYxMTk1LCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwianRpIjoiNDY1MTQxOWItNjk3Yi00OTViLWIyZTEtYWRlYTBiZWE4ZDYwIiwiY2xpZW50X2lkIjoiY2FzaCJ9.7c9Cz-wOffRwu52VMjbzI6lYNzgf7xJfhPag7wX4WfA",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9924/api/test",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9924",
+					"path": [
+						"api",
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "readProtected resource server",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiYXBpIl0sInVzZXJfbmFtZSI6InNsYXdlayIsInNjb3BlIjpbInJlYWQiXSwiZXhwIjoxNjA2MjYxMTk1LCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwianRpIjoiNDY1MTQxOWItNjk3Yi00OTViLWIyZTEtYWRlYTBiZWE4ZDYwIiwiY2xpZW50X2lkIjoiY2FzaCJ9.7c9Cz-wOffRwu52VMjbzI6lYNzgf7xJfhPag7wX4WfA",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9924/api/read",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9924",
+					"path": [
+						"api",
+						"read"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "write Protected resource server",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiYXBpIl0sInVzZXJfbmFtZSI6InNsYXdlayIsInNjb3BlIjpbInJlYWQiXSwiZXhwIjoxNjA2MjYxMTk1LCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwianRpIjoiNDY1MTQxOWItNjk3Yi00OTViLWIyZTEtYWRlYTBiZWE4ZDYwIiwiY2xpZW50X2lkIjoiY2FzaCJ9.7c9Cz-wOffRwu52VMjbzI6lYNzgf7xJfhPag7wX4WfA",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9924/api/write",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9924",
+					"path": [
+						"api",
+						"write"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "simple show auth resource server",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiYXBpIl0sInVzZXJfbmFtZSI6InNsYXdlayIsInNjb3BlIjpbInJlYWQiXSwiZXhwIjoxNjA2MjYxMTk1LCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwianRpIjoiNDY1MTQxOWItNjk3Yi00OTViLWIyZTEtYWRlYTBiZWE4ZDYwIiwiY2xpZW50X2lkIjoiY2FzaCJ9.7c9Cz-wOffRwu52VMjbzI6lYNzgf7xJfhPag7wX4WfA",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9924/api/simple",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9924",
+					"path": [
+						"api",
+						"simple"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "simple2 show auth resource server",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiYXBpIl0sInVzZXJfbmFtZSI6InNsYXdlayIsInNjb3BlIjpbInJlYWQiXSwiZXhwIjoxNjA2MjYxMTk1LCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwianRpIjoiNDY1MTQxOWItNjk3Yi00OTViLWIyZTEtYWRlYTBiZWE4ZDYwIiwiY2xpZW50X2lkIjoiY2FzaCJ9.7c9Cz-wOffRwu52VMjbzI6lYNzgf7xJfhPag7wX4WfA",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9924/api/simple2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9924",
+					"path": [
+						"api",
+						"simple2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "me",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiYXBpIl0sInVzZXJfbmFtZSI6InNsYXdlayIsInNjb3BlIjpbInJlYWQiXSwiZXhwIjoxNjA2MjYxMTk1LCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwianRpIjoiNDY1MTQxOWItNjk3Yi00OTViLWIyZTEtYWRlYTBiZWE4ZDYwIiwiY2xpZW50X2lkIjoiY2FzaCJ9.7c9Cz-wOffRwu52VMjbzI6lYNzgf7xJfhPag7wX4WfA",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9924/api/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9924",
+					"path": [
+						"api",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "whoami resource server",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiYXBpIl0sInVzZXJfbmFtZSI6InNsYXdlayIsInNjb3BlIjpbInJlYWQiXSwiZXhwIjoxNjA2MjYxMTk1LCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwianRpIjoiNDY1MTQxOWItNjk3Yi00OTViLWIyZTEtYWRlYTBiZWE4ZDYwIiwiY2xpZW50X2lkIjoiY2FzaCJ9.7c9Cz-wOffRwu52VMjbzI6lYNzgf7xJfhPag7wX4WfA",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9924/api/whoami",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9924",
+					"path": [
+						"api",
+						"whoami"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user resource",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "e71c430b-fe04-4aeb-8b5a-e6362bd8f073",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9924/api/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9924",
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

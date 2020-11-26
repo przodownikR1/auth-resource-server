@@ -1,0 +1,89 @@
+plugins {
+    id 'org.springframework.boot' version '2.4.0'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
+}
+
+group = 'pl.java.scalatech'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+}
+
+ext {
+    set('springCloudVersion', "2020.0.0-M5")
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.cloud:spring-cloud-starter-oauth2'
+    implementation 'org.springframework.cloud:spring-cloud-starter-security'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+bootRun {
+    if (System.properties.containsKey('SPRING_PROFILES_ACTIVE')) {
+        systemProperty "spring.profiles.active", System.properties['SPRING_PROFILES_ACTIVE']
+    }
+
+    def debugMode = []
+    if (project.hasProperty('debugPort')) {
+        debugMode = [
+                '-Xdebug',
+                '-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=' + project.getProperty('debugPort')
+        ]
+    }
+
+    def stdOpts = [
+            '-Dfile.encoding=UTF8',
+            '-Xms128m',
+            '-Xmx256m',
+            //'-XX:+UseG1GC'
+    ]
+    def gcOpts = [
+            '-XX:+IgnoreUnrecognizedVMOptions',
+            '-XX:+HeapDumpOnOutOfMemoryError',
+            '-XshowSettings:vm',
+            '-XX:+UseG1GC',
+            '-XX:+ExplicitGCInvokesConcurrent',
+            '-XX:+ParallelRefProcEnabled',
+            '-XX:+UnlockExperimentalVMOptions',
+            '-XX:+UseCGroupMemoryLimitForHeap',
+            '-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector'
+
+    ]
+    //     '-Xlog:gc:gc.log::filecount=10,filesize=100M'
+
+    jvmArgs = stdOpts + gcOpts + debugMode
+
+    if (project.hasProperty('jvmArgs')) {
+        jvmArgs project.jvmArgs.split('\\s+')
+    }
+}
